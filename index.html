@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arunabha Das | Legal & Creative Services</title>
+    
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f3f4f6;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
+        }
+        .legal-gold {
+            color: #c5a059;
+        }
+        .bg-legal-navy {
+            background-color: #1a237e;
+        }
+        .btn-primary {
+            background-color: #1a237e;
+            color: white;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #283593;
+            transform: translateY(-2px);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c5a059;
+            border-radius: 4px;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- SIMPLIFIED MOCK DATABASE (No Auth Required) ---
+        const mockDB = {
+            getArticles: () => {
+                const stored = localStorage.getItem("arunabha_articles");
+                return stored ? JSON.parse(stored) : [];
+            },
+            addArticle: (article) => {
+                const current = mockDB.getArticles();
+                const newArticle = { ...article, id: Date.now(), createdAt: new Date() };
+                const updated = [newArticle, ...current];
+                localStorage.setItem("arunabha_articles", JSON.stringify(updated));
+                return newArticle;
+            }
+        };
+
+        // --- Components ---
+
+        // 1. Navigation
+        const Navbar = () => (
+            <nav className="bg-white shadow-md sticky top-0 z-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between h-16">
+                        <div className="flex items-center">
+                            <i className="fas fa-gavel text-2xl legal-gold mr-2"></i>
+                            <span className="font-bold text-xl text-gray-800">Arunabha<span className="text-blue-900">Das</span></span>
+                        </div>
+                        <div className="hidden md:flex items-center space-x-8">
+                            <a href="#about" className="text-gray-600 hover:text-blue-900 transition font-semibold">About</a>
+                            <a href="#services" className="text-gray-600 hover:text-blue-900 transition font-semibold">Services</a>
+                            <a href="#blog" className="text-gray-600 hover:text-blue-900 transition font-semibold">Blog</a>
+                            <a href="#contact" className="text-gray-600 hover:text-blue-900 transition font-semibold">Contact</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        );
+
+        // 2. Hero Section
+        const Hero = () => (
+            <div className="bg-legal-navy text-white py-24 px-4 relative" style={{backgroundImage: 'url("https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1951&q=80")', backgroundBlendMode: 'multiply', backgroundSize: 'cover', backgroundPosition: 'center'}}>
+                <div className="max-w-4xl mx-auto text-center relative z-10">
+                    <span className="inline-block py-1 px-4 rounded-full bg-yellow-500/20 text-yellow-400 text-sm font-bold tracking-wider mb-6 border border-yellow-500/50">
+                        LEGAL ASSISTANT & FREELANCER
+                    </span>
+                    <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight drop-shadow-lg">Reliable Legal Support & <br/>Creative Solutions</h1>
+                    <p className="text-xl text-gray-200 mb-10 font-light max-w-2xl mx-auto">
+                        Drafting, Consultation, Accounting, and Video Editing services tailored to your specific needs.
+                    </p>
+                    <a href="#services" className="inline-block bg-yellow-600 text-white font-bold py-4 px-10 rounded-lg hover:bg-yellow-700 transition duration-300 shadow-xl transform hover:-translate-y-1">
+                        Explore My Services
+                    </a>
+                </div>
+            </div>
+        );
+
+        // 3. About Section
+        const About = () => (
+            <section id="about" className="py-24 bg-white">
+                <div className="max-w-5xl mx-auto px-4">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">About Me</h2>
+                        <div className="w-20 h-1 bg-yellow-500 mx-auto rounded"></div>
+                    </div>
+                    <div className="flex flex-col md:flex-row gap-12 items-center">
+                        <div className="w-full md:w-1/3">
+                            <div className="bg-gray-100 rounded-2xl h-80 flex items-center justify-center text-gray-400 shadow-inner border border-gray-200">
+                                <i className="fas fa-user-tie text-8xl text-gray-300"></i>
+                            </div>
+                        </div>
+                        <div className="w-full md:w-2/3">
+                            <h3 className="text-3xl font-bold text-blue-900 mb-6">Arunabha Das</h3>
+                            <p className="text-gray-700 mb-4 leading-relaxed text-lg">
+                                I am a dedicated <strong>Law Student</strong> with a passion for justice, precision, and practical problem-solving. Beyond my academic legal studies, I operate as a versatile freelancer, bridging the gap between complex professional requirements and everyday needs.
+                            </p>
+                            <p className="text-gray-700 mb-8 leading-relaxed text-lg">
+                                My expertise spans <strong>Legal Drafting and Consultation</strong>, ensuring your documents are robust and legally compliant. Additionally, I offer <strong>Freelance Accounting</strong> services to keep your finances in order, and professional <strong>Video Editing</strong> to bring your creative visions to life.
+                            </p>
+                            
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 bg-gray-50 p-6 rounded-xl border border-gray-100">
+                                <div className="flex items-center">
+                                    <i className="fas fa-check-circle text-green-500 mr-3 text-xl"></i>
+                                    <span className="font-semibold text-gray-800">Legal Research</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <i className="fas fa-check-circle text-green-500 mr-3 text-xl"></i>
+                                    <span className="font-semibold text-gray-800">Contract Drafting</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <i className="fas fa-check-circle text-green-500 mr-3 text-xl"></i>
+                                    <span className="font-semibold text-gray-800">Bookkeeping</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <i className="fas fa-check-circle text-green-500 mr-3 text-xl"></i>
+                                    <span className="font-semibold text-gray-800">Video Editing (Premiere Pro)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+
+        // 4. Products/Services Section
+        const Services = () => {
+            const products = [
+                {
+                    title: "Legal Consultation",
+                    icon: "fa-comments",
+                    desc: "30-minute consultation session regarding civil, criminal, or corporate legal queries.",
+                    price: "₹500 / session",
+                    color: "blue"
+                },
+                {
+                    title: "Legal Drafting",
+                    icon: "fa-file-signature",
+                    desc: "Professional drafting of Contracts, Legal Notices, Affidavits, and Agreements.",
+                    price: "₹1,500 / document",
+                    color: "indigo"
+                },
+                {
+                    title: "Freelance Accounting",
+                    icon: "fa-calculator",
+                    desc: "Monthly bookkeeping, expense tracking, and basic GST filing assistance for small businesses.",
+                    price: "₹3,000 / month",
+                    color: "green"
+                },
+                {
+                    title: "Video Editing",
+                    icon: "fa-film",
+                    desc: "High-quality video editing for YouTube, Reels, or Corporate presentations.",
+                    price: "₹500 / minute",
+                    color: "purple"
+                }
+            ];
+
+            return (
+                <section id="services" className="py-24 bg-gray-50">
+                    <div className="max-w-6xl mx-auto px-4">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Products & Services</h2>
+                            <div className="w-20 h-1 bg-yellow-500 mx-auto rounded mb-6"></div>
+                            <p className="text-gray-600 max-w-2xl mx-auto text-lg">Reasonable pricing for professional, high-quality work. Contact me directly to book any of these services.</p>
+                        </div>
+                        
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                            {products.map((p, idx) => (
+                                <div key={idx} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border-t-4 transform hover:-translate-y-2" style={{borderColor: p.color === 'blue' ? '#1e40af' : p.color === 'indigo' ? '#4f46e5' : p.color === 'green' ? '#10b981' : '#9333ea'}}>
+                                    <div className="p-8">
+                                        <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 bg-${p.color}-50 text-${p.color}-600 shadow-sm`}>
+                                            <i className={`fas ${p.icon} text-2xl`}></i>
+                                        </div>
+                                        <h3 className="text-xl font-bold text-gray-900 mb-3">{p.title}</h3>
+                                        <p className="text-gray-500 text-sm mb-6 min-h-[80px] leading-relaxed">{p.desc}</p>
+                                        <div className="flex items-baseline mb-6 pb-6 border-b border-gray-100">
+                                            <span className="text-2xl font-bold text-gray-900">{p.price}</span>
+                                        </div>
+                                        <a href="mailto:abhipages@gmail.com" className="block w-full py-3 bg-gray-900 text-white text-center rounded-lg hover:bg-blue-900 transition-colors text-sm font-bold shadow-md">
+                                            Request Service
+                                        </a>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // 5. Blog Section
+        const Blog = () => {
+            const [articles, setArticles] = useState([]);
+            const [newTitle, setNewTitle] = useState("");
+            const [newContent, setNewContent] = useState("");
+            const [isPosting, setIsPosting] = useState(false);
+
+            useEffect(() => {
+                const loaded = mockDB.getArticles();
+                setArticles(loaded);
+            }, []);
+
+            const handlePost = (e) => {
+                e.preventDefault();
+                if (!newTitle.trim() || !newContent.trim()) return;
+                
+                setIsPosting(true);
+                setTimeout(() => {
+                    const newArticle = mockDB.addArticle({
+                        title: newTitle,
+                        content: newContent,
+                        author: "Arunabha Das"
+                    });
+                    setArticles([newArticle, ...articles]);
+                    setNewTitle("");
+                    setNewContent("");
+                    setIsPosting(false);
+                }, 500);
+            };
+
+            const formatDate = (dateStr) => {
+                return new Date(dateStr).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                });
+            };
+
+            return (
+                <section id="blog" className="py-24 bg-white">
+                    <div className="max-w-4xl mx-auto px-4">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Legal Insights & Blog</h2>
+                            <div className="w-20 h-1 bg-yellow-500 mx-auto rounded mb-6"></div>
+                            <p className="text-gray-600 text-lg">Read my latest thoughts, articles, and updates on law and justice.</p>
+                        </div>
+
+                        {/* Posting Form */}
+                        <div className="bg-blue-50 p-8 rounded-2xl mb-16 border border-blue-100 shadow-inner">
+                            <h3 className="text-xl font-bold text-blue-900 mb-6"><i className="fas fa-pen-nib mr-3"></i>Draft a New Article</h3>
+                            <form onSubmit={handlePost}>
+                                <input 
+                                    className="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    placeholder="Enter Article Title..."
+                                    value={newTitle}
+                                    onChange={e => setNewTitle(e.target.value)}
+                                    required
+                                />
+                                <textarea 
+                                    className="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all h-40 resize-y"
+                                    placeholder="Write your legal insights or blog content here..."
+                                    value={newContent}
+                                    onChange={e => setNewContent(e.target.value)}
+                                    required
+                                ></textarea>
+                                <button 
+                                    type="submit" 
+                                    disabled={isPosting}
+                                    className="bg-blue-700 text-white px-8 py-3 rounded-lg hover:bg-blue-800 font-bold shadow-md disabled:opacity-50 transition-colors"
+                                >
+                                    {isPosting ? "Publishing..." : "Publish Article"}
+                                </button>
+                            </form>
+                        </div>
+
+                        {/* Article Feed */}
+                        <div className="space-y-10">
+                            {articles.length === 0 ? (
+                                <div className="text-center py-10 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+                                    <i className="far fa-newspaper text-4xl text-gray-300 mb-3"></i>
+                                    <p className="text-gray-500 italic">No articles published yet. Use the form above to post your first insight!</p>
+                                </div>
+                            ) : (
+                                articles.map(post => (
+                                    <div key={post.id} className="bg-white p-8 rounded-2xl shadow-md border-l-4 border-yellow-500 animate-fade-in hover:shadow-lg transition-shadow">
+                                        <h3 className="text-2xl font-bold text-gray-900 mb-3 font-serif">{post.title}</h3>
+                                        <div className="flex items-center text-sm text-gray-500 mb-6 bg-gray-50 inline-block px-3 py-1 rounded-md">
+                                            <span className="mr-4"><i className="far fa-calendar-alt mr-2 text-blue-900"></i> {formatDate(post.createdAt)}</span>
+                                            <span><i className="far fa-user mr-2 text-blue-900"></i> {post.author}</span>
+                                        </div>
+                                        <p className="text-gray-700 leading-relaxed whitespace-pre-wrap text-lg">{post.content}</p>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // 6. Contact Section
+        const Contact = () => (
+            <section id="contact" className="py-24 bg-legal-navy text-white text-center">
+                <div className="max-w-3xl mx-auto px-4">
+                    <i className="fas fa-envelope-open-text text-5xl text-yellow-500 mb-6"></i>
+                    <h2 className="text-3xl md:text-4xl font-bold mb-6 font-serif">Get in Touch</h2>
+                    <p className="text-xl text-gray-300 mb-10 font-light">
+                        Whether you need a contract drafted, your accounts managed, or a video edited, I am ready to assist you.
+                    </p>
+                    <div className="bg-white/10 p-10 rounded-2xl backdrop-blur-md inline-block border border-white/20 shadow-2xl">
+                        <p className="text-gray-300 text-sm mb-3 uppercase tracking-widest font-semibold">Direct Email Address</p>
+                        <a href="mailto:abhipages@gmail.com" className="text-2xl md:text-4xl font-bold text-yellow-400 hover:text-white transition-colors duration-300 break-all">
+                            abhipages@gmail.com
+                        </a>
+                    </div>
+                </div>
+            </section>
+        );
+
+        // 7. Footer
+        const Footer = () => (
+            <footer className="bg-gray-900 text-gray-400 py-10 text-center">
+                <div className="mb-4">
+                    <i className="fas fa-balance-scale text-2xl text-gray-600"></i>
+                </div>
+                <p className="font-semibold">&copy; 2026 Arunabha Das. All Rights Reserved.</p>
+                <p className="mt-2 text-sm">Legal Assistant | Freelancer | Student</p>
+            </footer>
+        );
+
+        // --- Main App Component ---
+        const App = () => {
+            return (
+                <div className="animate-fade-in selection:bg-yellow-200 selection:text-blue-900">
+                    <Navbar />
+                    <Hero />
+                    <About />
+                    <Services />
+                    <Blog />
+                    <Contact />
+                    <Footer />
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
