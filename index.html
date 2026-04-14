@@ -354,35 +354,17 @@
         );
 
         // 7. Footer
-        const Footer = () => (
-            <footer className="bg-gray-900 text-gray-400 py-10 text-center">
-                <div className="mb-4">
-                    <i className="fas fa-balance-scale text-2xl text-gray-600"></i>
-                </div>
-                <p className="font-semibold">&copy; 2026 Arunabha Das. All Rights Reserved.</p>
-                <p className="mt-2 text-sm">Legal Assistant | Freelancer | Student</p>
-            </footer>
-        );
-
-        // --- Main App Component ---
-        const App = () => {
-            return (
-                <div className="animate-fade-in selection:bg-yellow-200 selection:text-blue-900">
-                    <Navbar />
-                    <Hero />
-                    <About />
-                    <Services />
-                    <Blog />
-                    <Contact />
-                    <Footer />
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-   <div style="text-align: center; padding: 15px; background-color: #111827; border-top: 1px solid #374151;">
-    <img src="https://komarev.com/ghpvc/?username=Arunabhadas2006&color=4ade80&style=flat-square&label=VISITORS" alt="Visitor Count">
-</div>
-</body>
-</html>
+        // 7. Footer
+const Footer = () => (
+    <footer className="bg-gray-900 text-gray-400 py-10 text-center">
+        <div className="mb-4">
+            <i className="fas fa-balance-scale text-2xl text-gray-600"></i>
+        </div>
+        <p className="font-semibold">&copy; 2026 Arunabha Das. All Rights Reserved.</p>
+        <p className="mt-2 text-sm">Legal Assistant | Freelancer | Student</p>
+        
+        <div className="mt-6 flex flex-col items-center gap-2">
+            <p className="text-xs uppercase tracking-widest text-gray-500">Total Visitors</p>
+            <img src="https://komarev.com/ghpvc/?username=Arunabhadas2006&color=4ade80&style=flat-square&label=VISITORS" alt="Visitor Count" />
+        </div>
+    </footer>
